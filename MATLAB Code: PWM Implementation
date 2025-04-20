@@ -1,0 +1,46 @@
+clc;
+clear;
+close all;
+
+%% Parameters
+Fs = 10000;               % Sampling frequency
+t = 0:1/Fs:0.02;          % Time vector (20 ms duration)
+
+fm = 50;                  % Message frequency (Hz)
+fc = 1000;                % PWM carrier frequency (Hz)
+Am = 1;                   % Message amplitude
+Ac = 1;                   % Carrier amplitude
+
+%% Message Signal (sinusoidal)
+m = Am * sin(2*pi*fm*t);         
+
+%% Sawtooth Carrier for PWM
+carrier = sawtooth(2*pi*fc*t, 0.5);  % Triangular waveform (0.5 symmetry)
+
+%% PWM Generation
+pwm = double(m > carrier);          % Generate PWM signal (1 where message > carrier)
+
+%% Plotting
+figure;
+
+subplot(3,1,1);
+plot(t, m);
+title('Message Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+grid on;
+
+subplot(3,1,2);
+plot(t, carrier);
+title('Sawtooth Carrier Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+grid on;
+
+subplot(3,1,3);
+plot(t, pwm, 'k');
+title('PWM Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+axis([0 0.02 -0.2 1.2]);
+grid on;
